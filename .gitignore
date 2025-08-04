@@ -1,0 +1,41 @@
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+
+# Virtual environment
+.venv/
+venv/
+env/
+ENV/
+
+# Django stuff
+*.log
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+static_root/
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Tailwind / Node.js / Frontend tooling
+node_modules/
+npm-debug.log
+dist/
+build/
+*.css.map
+
+# Environment variables
+.env
+.env.*
+
+# Coverage / testing
+htmlcov/
+.coverage
+.tox/
+.pytest_cache/

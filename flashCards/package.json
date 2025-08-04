@@ -1,0 +1,19 @@
+{
+  "name": "flashcards_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npx tailwindcss -i ./flashcards_app/static/flashcards_app/css/input.css -o ./flashcards_app/static/flashcards_app/css/output.css --watch\" \"python manage.py runserver\"",
+    "build": "npx tailwindcss -i ./flashcards_app/static/flashcards_app/css/input.css -o ./flashcards_app/static/flashcards_app/css/output.css --minify"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "concurrently": "^9.2.0",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.1"
+  }
+}

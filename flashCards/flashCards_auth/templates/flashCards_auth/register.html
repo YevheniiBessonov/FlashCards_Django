@@ -1,0 +1,15 @@
+{% extends "flashCards_app/base.html" %}
+{% block content %}
+
+<div class="h-screen flex justify-center">
+    <div class=" rounded-lg bg-gray-800 text-pink-300 text-center shadow-lg p-8 mt-[5%] shadow-gray-600">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">
+                Register
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
