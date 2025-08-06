@@ -1,19 +1,4 @@
-{% extends "flashcards_app/base.html" %}
+{% extends "flashcards_app/base_flashcards_app.html" %}
 {% block content %}
-<div class="min-h-screen bg-blue-200 flex">
-    <div class="w-1/4 text-center bg-slate-700 py-8 text-white">
-        <a href="{% url 'collection-create' %}" class="text-white font-bold hover:text-pink-300 py-2 block">
-            <span class="mr-2">+</span>Create Collection</a>
 
-        <h2 class="text-xl font-bold mt-8 mb-4">My Collections</h2>
-        {% for collection in collections %}
-            <p class="mb-2">{{collection.name}}</p>
-        {% endfor %}
-    </div>
-
-    <div class="w-3/4 bg-white p-8 text-center">
-        <h2 class="text-2xl font-bold mb-4">Collections</h2>
-        </form>
-    </div>
-</div>
 {% endblock %}

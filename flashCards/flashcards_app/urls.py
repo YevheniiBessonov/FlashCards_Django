@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from .views import index, CollectionListView, CollectionDetailView, CollectionCreateView, CollectionDeleteView, \
-    CollectionUpdateView
+    CollectionUpdateView, CardCreateView
 
 urlpatterns = [
     path("", index, name="index"),
@@ -10,5 +10,5 @@ urlpatterns = [
     path("collections/create/", CollectionCreateView.as_view(), name="collection-create"),
     path("collections/<int:pk>/delete/", CollectionDeleteView.as_view(), name="collection-delete"),
     path("collections/<int:pk>/update/", CollectionUpdateView.as_view(), name="collection-update"),
-
+    path("collections/<int:pk>/create-card/", CardCreateView.as_view(), name="collection-create-card",),
 ]

@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
 from .models import Card, Collection
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .forms import CardForm, CollectionForm
@@ -19,7 +19,7 @@ class CollectionListView(ListView):
 
 class CollectionDetailView(DetailView):
     model = Collection
-    template_name = "flashcards_app/collection_detail.html"
+    template_name = "flashcards_app/collections.html"
     context_object_name = "collection"
 
 
@@ -29,16 +29,15 @@ class CollectionCreateView(CreateView):
     template_name = "flashcards_app/collection_create.html"
     success_url = reverse_lazy("collection-list")
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super().form_valid(form)
 
-    # add the user's collections to the context
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["collections"] = Collection.objects.filter(owner=self.request.user)
-        return context
 
 class CollectionUpdateView(UpdateView):
     model = Collection
@@ -50,6 +49,43 @@ class CollectionUpdateView(UpdateView):
 class CollectionDeleteView(DeleteView):
     model = Collection
     template_name = "flashcards_app/collection_delete.html"
-    success_url = "/collection/"
+    success_url = "/collections/"
+
 
 # ------------------ Card Views -----------------
+
+class CardListView(ListView):
+    model = Card
+    template_name = "flashcards_app/cards.html"
+    context_object_name = "cards"
+
+
+class CardDetailView(DetailView):
+    model = Card
+    template_name = "flashcards_app/collections.html"
+    context_object_name = "card"
+
+
+class CardCreateView(CreateView):
+    model = Card
+    form_class = CardForm
+    template_name = "flashcards_app/card_create.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+
+        self.collection = get_object_or_404(Collection, pk=self.kwargs['pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.collection = self.collection
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['collection'] = self.collection
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy("collection-detail", kwargs={"pk": self.collection.pk})

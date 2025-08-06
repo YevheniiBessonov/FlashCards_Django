@@ -1,0 +1,13 @@
+{% extends "flashcards_app/base_flashcards_app.html" %}
+{% block content %}
+
+<h2 class="text-2xl font-bold mb-4">Are you sure you want to delete {{collection.name}}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="bg-red-400 hover:bg-red-500 text-green-500 rounded-lg p-2">
+        Delete
+    </button>
+</form>
+
+{% endblock %}

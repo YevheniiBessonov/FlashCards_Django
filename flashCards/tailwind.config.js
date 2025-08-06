@@ -2,8 +2,8 @@
 module.exports = {
     content: [
         './templates/**/*.html',
-        './**/templates/**/*.html',  // Охватывает все уровни вложенности шаблонов
-        './**/*.py',                 // Если вы используете классы в строках Python
+        './**/templates/**/*.html',
+        './**/*.py',
     ],
     darkMode: 'class',
     theme: {

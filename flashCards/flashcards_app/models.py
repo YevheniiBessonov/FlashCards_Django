@@ -17,7 +17,7 @@ class Collection(models.Model):
 class Card(models.Model):
     front = models.TextField()
     back = models.TextField()
-    collection = models.ForeignKey(Collection, on_delete=models.CASCADE)
+    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name="cards")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
