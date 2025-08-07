@@ -50,8 +50,8 @@
 
         <h2 class="text-xl font-bold mt-8 mb-4">My Collections</h2>
         {% for collection in collections %}
-        <p class="mb-2">{{collection.name}}
-            <a href="{% url 'collection-create-card' collection.id %}">
+        <p class="mb-2"><a href="{% url 'deck-list' %}">{{collection.name}}</a>
+            <a href="{% url 'deck-create' collection.id %}">
                 <svg class="w-4 h-4 inline-block ml-2 text-cyan-200 " xmlns="http://www.w3.org/2000/svg" fill="none"
                      viewBox="0 0 24 24" stroke-width="1.5"
                      stroke="currentColor">

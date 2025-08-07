@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
-from .models import Card, Collection
+from .models import Card, Collection, Deck
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .forms import CardForm, CollectionForm
+from .forms import CardForm, CollectionForm, DeckForm
 from django.urls import reverse_lazy
 
 
@@ -89,3 +89,42 @@ class CardCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy("collection-detail", kwargs={"pk": self.collection.pk})
+
+
+# ------------------ Deck Views -----------------
+
+class DeckListView(ListView):
+    model = Deck
+    template_name = "flashcards_app/decks.html"
+    context_object_name = "decks"
+
+
+class DeckDetailView(DetailView):
+    model = Deck
+    template_name = "flashcards_app/decks.html"
+    context_object_name = "decks"
+
+
+class DeckCreateView(CreateView):
+    model = Deck
+    form_class = DeckForm
+    template_name = "flashcards_app/deck_create.html"
+    success_url = reverse_lazy("deck-list")
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        form.instance.collection = get_object_or_404(Collection, pk=self.kwargs['pk'])
+        return super().form_valid(form)
+
+
+class DeckUpdateView(UpdateView):
+    model = Deck
+    fields = ['name', 'description']
+    template_name = "flashcards_app/deck_update.html"
+    success_url = "/collections/"
+
+
+class DeckDeleteView(DeleteView):
+    model = Deck
+    template_name = "flashcards_app/deck_delete.html"
+    success_url = "/collections/"
