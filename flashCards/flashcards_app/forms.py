@@ -17,7 +17,7 @@ class CollectionForm(forms.ModelForm):
 class CardForm(forms.ModelForm):
     class Meta:
         model = Card
-        fields = ['front', 'back', 'collection', 'deck']
+        fields = ['front', 'back']
         widgets = {
             'front': forms.Textarea(attrs={'class': 'border rounded-lg p-2 w-full', 'rows': 4,
                                            'placeholder': 'Лицевая сторона карточки (вопрос)'}),

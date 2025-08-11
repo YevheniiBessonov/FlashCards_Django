@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     {% load static %}
     <meta charset="UTF-8">
@@ -7,8 +7,12 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <title>Flashcards App</title>
     <link rel="stylesheet" href="{% static 'flashcards_app/css/output.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap"
+          rel="stylesheet">
 </head>
-<body class="bg-gray-400">
+<body class="bg-cyan-200 font-sans">
 
 <div class="flex justify-between bg-gray-800">
     <div class="flex items-center ml-4">
@@ -16,14 +20,14 @@
                                          class="w-16 transition-shadow rounded-lg duration-300 hover:shadow-lg hover:shadow-gray-300 "></a>
     </div>
     <div x-data="{ open: false }" class="relative inline-block rounded-md flex-none mr-4">
-        <!-- Картинка -->
+
         <img src="{% static 'flashcards_app/images/login.png' %}"
              @click="open = !open"
              class="w-14 mt-[1px] cursor-pointer rounded-full transition-shadow duration-300
             hover:shadow-lg hover:shadow-gray-300"
              :class="{'shadow-lg shadow-gray-300': open}"/>
 
-        <!-- Меню -->
+
         <div x-show="open"
              @click.away="open = false"
              class="absolute right-[-10px] mt-2  w-20 bg-gray-600 rounded-md shadow-lg shadow-gray-600">
@@ -43,14 +47,14 @@
         </div>
     </div>
 </div>
-<div class="min-h-screen bg-blue-200 flex">
-    <div class="w-1/4 text-center bg-slate-700 py-8 text-white">
+<div class="min-h-screen bg-gray-600 flex">
+    <div class="w-1/4 text-left bg-slate-700 py-8 px-8 text-white">
         <a href="{% url 'collection-create' %}" class="text-white font-bold hover:text-pink-300 py-2 block">
             <span class="mr-2">+</span>Create Collection</a>
 
-        <h2 class="text-xl font-bold mt-8 mb-4">My Collections</h2>
+        <h2 class="text-xl font-bold text-center pb-4 pt-6">My Collections</h2>
         {% for collection in collections %}
-        <p class="mb-2"><a href="{% url 'deck-list' %}">{{collection.name}}</a>
+        <p class="mb-2"><a href="{% url 'decks-by-collection' collection.id %}">{{collection.name}}</a>
             <a href="{% url 'deck-create' collection.id %}">
                 <svg class="w-4 h-4 inline-block ml-2 text-cyan-200 " xmlns="http://www.w3.org/2000/svg" fill="none"
                      viewBox="0 0 24 24" stroke-width="1.5"
