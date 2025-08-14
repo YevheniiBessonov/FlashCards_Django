@@ -1,13 +1,116 @@
 {% extends "flashcards_auth/base_auth.html" %}
+{% load static %}
+
 {% block content %}
 
-<div class="h-screen flex justify-center">
-    <div class=" rounded-lg bg-gray-800 text-pink-300 text-center shadow-lg p-8 mt-[5%] shadow-gray-600">
-        <form method="post">
+<div class="h-screen w-screen flex items-center justify-center bg-cover bg-center">
+    <div class="w-1/4 h-auto rounded-lg bg-gray-800 text-center p-8 shadow-xl shadow-gray-500 border-2 border-gray-600">
+        <div class="flex flex-col space-y-3 mb-6">
+            <button class="w-full flex items-center justify-center py-2 px-4 rounded-lg font-semibold transition
+                           bg-gray-700 hover:bg-gray-600 text-gray-300 border border-gray-600">
+                <svg class="mr-3" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19.7917 10.2197C19.7917 9.53986 19.7397 8.90382 19.625 8.2915H10V11.8431H15.4216C15.1873 13.0645 14.4277 14.0768 13.3333 14.7709V17.0209H16.3533C18.1565 15.313 19.2917 12.875 19.7917 10.2197Z"
+                          fill="#4285F4"/>
+                    <path d="M10 20C12.6562 20 14.9375 19.1146 16.3533 17.0209L13.3333 14.7709C12.4998 15.3262 11.3644 15.6875 10 15.6875C7.42625 15.6875 5.25333 14.0313 4.41875 11.8229H1.20833V14.1771C2.8125 17.3438 6.13542 20 10 20Z"
+                          fill="#34A853"/>
+                    <path d="M4.41875 11.8229C4.21458 11.2187 4.10417 10.5938 4.10417 10C4.10417 9.40625 4.21458 8.78125 4.41875 8.17708V5.82292H1.20833C0.439583 7.375 0 9.125 0 10C0 10.875 0.439583 12.625 1.20833 14.1771L4.41875 11.8229Z"
+                          fill="#FBBC05"/>
+                    <path d="M10 4.3125C11.4583 4.3125 12.75 4.90625 13.8229 5.82292L16.4271 3.21875C14.9375 1.70833 12.6562 0.8125 10 0.8125C6.13542 0.8125 2.8125 3.46875 1.20833 6.63542L4.41875 8.17708C5.25333 5.96875 7.42625 4.3125 10 4.3125Z"
+                          fill="#EA4335"/>
+                </svg>
+                Continue with Google
+            </button>
+        </div>
+        <div class="relative flex justify-center items-center my-6">
+            <hr class="flex-grow border-t-2 border-gray-600">
+            <span class="absolute px-4 text-gray-400 text-sm bg-gray-800">or</span>
+        </div>
+
+        <p class="text-2xl font-bold mb-4 bg-gradient-to-r from-cyanColor to-darkCyanColor bg-clip-text text-transparent"">
+            Sign up </p>
+        <form method="post" class="space-y-4">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">
-                Register
+            <div class="relative mb-4">
+
+                <label for="{{ form.username.id_for_label }}" class="sr-only">{{ form.username.label }}</label>
+                <div class="absolute inset-y-0 right-1 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="userIconGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:rgba(0,180,180,1);stop-opacity:1"/>
+                                <stop offset="100%" style="stop-color:rgba(180,0,100,0.7);stop-opacity:1"/>
+                            </linearGradient>
+                        </defs>
+                        <path stroke="url(#userIconGradient)" stroke-linecap="round" stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                </div>
+                {{ form.username }}
+            </div>
+            <div class="relative mb-4">
+
+                <label for="{{ form.email.id_for_label }}" class="sr-only">{{ form.email.label }}</label>
+                <div class="absolute inset-y-0 right-1 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="emailIconGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:rgba(0,180,180,1);stop-opacity:1"/>
+                                <stop offset="100%" style="stop-color:rgba(180,0,100,0.7);stop-opacity:1"/>
+                            </linearGradient>
+                        </defs>
+                        <path stroke="url(#emailIconGradient)" stroke-linecap="round" stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M3 8l7.89 5.26c.49.33 1.13.33 1.62 0L21 8m-18 0a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"></path>
+                    </svg>
+                </div>
+                {{ form.email }}
+            </div>
+
+            <div class="relative mb-6">
+                <label for="{{ form.password.id_for_label }}" class="sr-only">{{ form.password.label }}</label>
+                <div class="absolute inset-y-0 right-1 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="lockIconGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:rgba(0,180,180,1);stop-opacity:1"/>
+                                <stop offset="100%" style="stop-color:rgba(180,0,100,0.7);stop-opacity:1"/>
+                            </linearGradient>
+                        </defs>
+                        <path stroke="url(#lockIconGradient)" stroke-linecap="round" stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                {{ form.password1 }}
+            </div>
+            <div class="relative mb-6">
+                <label for="{{ form.password.id_for_label }}" class="sr-only">{{ form.password.label }}</label>
+                <div class="absolute inset-y-0 right-1 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="lockIconGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:rgba(0,180,180,1);stop-opacity:1"/>
+                                <stop offset="100%" style="stop-color:rgba(180,0,100,0.7);stop-opacity:1"/>
+                            </linearGradient>
+                        </defs>
+                        <path stroke="url(#lockIconGradient)" stroke-linecap="round" stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                {{ form.password2 }}
+            </div>
+            <div class="justify-center text-sm mb-6">
+                <a href="{% url 'login' %}" class="text-gray-400 hover:text-white transition">Already have an
+                    account?</a>
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-custom-gradient-before hover:bg-custom-gradient-after
+               text-gray-300 font-semibold mt-20 py-2 px-4 rounded-lg transition">
+                Create Account
             </button>
         </form>
     </div>

@@ -8,9 +8,9 @@ class CollectionForm(forms.ModelForm):
         fields = ['name', 'description']
         widgets = {
             'name': forms.TextInput(
-                attrs={'class': 'border rounded-lg p-2 w-full', 'placeholder': 'Название коллекции'}),
+                attrs={'class': 'border rounded-lg p-2 w-full', 'placeholder': 'Collection name'}),
             'description': forms.Textarea(
-                attrs={'class': 'border rounded-lg p-2 w-full', 'rows': 4, 'placeholder': 'Описание коллекции'}),
+                attrs={'class': 'border rounded-lg p-2 w-full', 'rows': 4, 'placeholder': 'Collection description'}),
         }
 
 
@@ -20,9 +20,9 @@ class CardForm(forms.ModelForm):
         fields = ['front', 'back']
         widgets = {
             'front': forms.Textarea(attrs={'class': 'border rounded-lg p-2 w-full', 'rows': 4,
-                                           'placeholder': 'Лицевая сторона карточки (вопрос)'}),
+                                           'placeholder': 'Front side of the card (question)'}),
             'back': forms.Textarea(attrs={'class': 'border rounded-lg p-2 w-full', 'rows': 4,
-                                          'placeholder': 'Обратная сторона карточки (ответ)'}),
+                                          'placeholder': 'Back side of the card (answer)'}),
         }
 
 

@@ -1,8 +1,7 @@
-from django.urls import path, include
+from django.urls import path
 from .views import CustomRegisterView, CustomLoginView
-from django.contrib.auth.views import LoginView, LogoutView
-from .forms import CustomUserLoginForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LogoutView
+
 
 urlpatterns = [
     path("login/", CustomLoginView.as_view(template_name="flashCards_auth/login.html"), name="login"),

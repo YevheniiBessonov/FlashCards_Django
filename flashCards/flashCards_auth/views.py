@@ -8,13 +8,14 @@ from django.contrib.auth.views import LoginView
 
 class CustomLoginView(LoginView):
     template_name = "flashCards_auth/login.html"
+    form_class = CustomUserLoginForm
     redirect_authenticated_user = True
     next_page = "/collections/"
 
 
 class CustomRegisterView(View):
     template_name = "flashCards_auth/register.html"
-    form = CustomUserCreationForm
+    form_class = CustomUserCreationForm
     success_url = reverse_lazy("login")
 
     def dispatch(self, request, *args, **kwargs):
@@ -23,10 +24,12 @@ class CustomRegisterView(View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
-        return render(request, self.template_name, {"form": self.form()})
+        # Corrected: Use self.form_class instead of self.form
+        return render(request, self.template_name, {"form": self.form_class()})
 
     def post(self, request):
-        form = self.form(request.POST)
+        # Corrected: Use self.form_class instead of self.form
+        form = self.form_class(request.POST)
         if form.is_valid():
             try:
                 form.save()
@@ -36,3 +39,4 @@ class CustomRegisterView(View):
             except Exception as e:
                 messages.error(request, f"Error creating account: {e}")
         return render(request, self.template_name, {"form": form})
+

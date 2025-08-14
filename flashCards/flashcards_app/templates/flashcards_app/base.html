@@ -16,14 +16,12 @@
                                          class="w-16 transition-shadow rounded-lg duration-300 hover:shadow-lg hover:shadow-gray-300 "></a>
     </div>
     <div x-data="{ open: false }" class="relative inline-block rounded-md flex-none mr-4">
-        <!-- Картинка -->
         <img src="{% static 'flashcards_app/images/login.png' %}"
              @click="open = !open"
              class="w-14 mt-[1px] cursor-pointer rounded-full transition-shadow duration-300
             hover:shadow-lg hover:shadow-gray-300"
              :class="{'shadow-lg shadow-gray-300': open}"/>
 
-        <!-- Меню -->
         <div x-show="open"
              @click.away="open = false"
              class="absolute right-[-10px] mt-2  w-20 bg-gray-600 rounded-md shadow-lg shadow-gray-600">

@@ -97,15 +97,21 @@ class CardCreateView(CreateView):
         context['deck'] = get_object_or_404(Deck, pk=self.kwargs['deck_pk'])
         return context
 
-    def get_object(self, queryset=None):
-        collection_pk = self.kwargs.get('pk')
-        deck_pk = self.kwargs.get('deck_pk')
-
-        deck = get_object_or_404(Deck, pk=deck_pk, collection__pk=collection_pk)
-        return deck
+    # def get_object(self, queryset=None):
+    #     collection_pk = self.kwargs.get('pk')
+    #     deck_pk = self.kwargs.get('deck_pk')
+    #
+    #     deck = get_object_or_404(Deck, pk=deck_pk, collection__pk=collection_pk)
+    #     return deck
 
     def get_success_url(self):
-        return reverse_lazy("decks-by-collection", kwargs={"pk": self.kwargs['pk']})
+        return reverse_lazy(
+            "card-create",
+            kwargs={
+                "pk": self.kwargs["pk"],
+                "deck_pk": self.kwargs["deck_pk"],
+            }
+        )
 
 
 class CardUpdateView(UpdateView):
