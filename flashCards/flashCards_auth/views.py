@@ -24,11 +24,9 @@ class CustomRegisterView(View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
-        # Corrected: Use self.form_class instead of self.form
         return render(request, self.template_name, {"form": self.form_class()})
 
     def post(self, request):
-        # Corrected: Use self.form_class instead of self.form
         form = self.form_class(request.POST)
         if form.is_valid():
             try:

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm, SetPasswordForm
 
 base_attrs = (
     'block w-full text-gray-700 rounded-lg px-3 py-2 my-2 border-none outline-none border-2 bg-gray-300 focus:bg-gray-100'
@@ -38,3 +38,19 @@ class CustomUserLoginForm(AuthenticationForm):
             'class': base_attrs,
             'placeholder': 'Password',
         })
+
+
+class CustomPasswordResetForm(PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs.update(
+            {'class': base_attrs, 'placeholder': 'Enter your email'})
+
+
+class CustomSetPasswordForm(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['new_password1'].widget.attrs.update(
+            {'class': base_attrs, 'placeholder': 'New Password'})
+        self.fields['new_password2'].widget.attrs.update(
+            {'class': base_attrs, 'placeholder': 'Repeat New Password'})

@@ -13,13 +13,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap"
           rel="stylesheet">
 </head>
-<body class="font-sans">
+<body class="min-h-screen bg-gradient-to-br from-gray-800 via-gray-700 to-gray-900 font-sans">
 
-<div class="flex justify-between bg-gray-800 w-screen">
+<div class="flex justify-between bg-gray-800 w-full">
     <div class="flex items-center ml-4">
         <a href="{% url 'index' %}"><img src="{% static 'flashcards_app/images/logo.png' %}"
                                          class="w-16 transition-shadow rounded-lg duration-300 hover:shadow-lg hover:shadow-gray-300 "></a>
     </div>
+
     <div x-data="{ open: false }" class="relative inline-block rounded-md flex-none right-[40px]">
         <img src="{% static 'flashcards_app/images/login.png' %}"
              @click="open = !open"
@@ -33,26 +34,32 @@
             {% if not user.is_authenticated %}
             <a href="{% url 'login' %}"
                class="block px-4 py-2 flex items-center text-gray-400 hover:text-gray-300">
-                <i class="fa-solid fa-right-to-bracket mr-2"></i>Login</a> {# Added mr-2 #}
+                <i class="fa-solid fa-right-to-bracket mr-2"></i>Login</a>
             <a href="{% url 'register' %}"
-               class="block px-4 py-2 flex items-center text-gray-400 hover:text-gray-300"> {# Added flex items-center #}
-                <i class="fa-solid fa-user-plus mr-2"></i>Register</a> {# Added mr-2 #}
+               class="block px-4 py-2 flex items-center text-gray-400 hover:text-gray-300">
+                <i class="fa-solid fa-user-plus mr-2"></i>Register</a>
             {% else %}
+            {% if user.username %}
+            <div class="px-4 py-2 flex justify-center items-center text-gray-400 hover:text-gray-300">
+                Hi, {{user.username}}
+            </div>
+            <hr class="flex-grow border-t-2 border-gray-600 mx-2 pb-2">
+            {% endif %}
             <a href="{% url 'collection-list' %}"
-               class="block px-4 py-2 flex items-center text-gray-400 hover:text-gray-300"> {# Added flex items-center #}
-                <i class="fa-solid fa-layer-group mr-2"></i>Collection</a> {# Added mr-2 #}
+               class="block px-4 py-2 flex items-center text-gray-400 hover:text-gray-300">
+                <i class="fa-solid fa-layer-group mr-2"></i>Collection</a>
             <form action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
                 <button type="submit"
-                        class="block w-full text-left px-4 py-2 flex items-center text-gray-400 hover:text-gray-300"> {# Added flex items-center #}
-                    <i class="fa-solid fa-right-from-bracket mr-2"></i>Logout</button> {# Added mr-2 #}
+                        class="block w-full text-left px-4 py-2 flex items-center text-gray-400 hover:text-gray-300">
+                    <i class="fa-solid fa-right-from-bracket mr-2"></i>Logout</button>
             </form>
             {% endif %}
         </div>
     </div>
 </div>
-<div class="min-h-screen bg-gray-600 flex">
-    <div class="w-1/4 text-left bg-slate-700 py-8 px-8 text-white">
+<div class="min-h-screen flex">
+    <div class="w-1/4 text-left bg-gray-900/80 backdrop-blur py-8 px-8 text-white">
         <a href="{% url 'collection-create' %}" class="text-white font-bold hover:text-pink-300 py-2 block">
             <span class="mr-2">+</span>Create Collection</a>
 

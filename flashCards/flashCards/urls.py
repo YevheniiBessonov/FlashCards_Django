@@ -22,5 +22,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("flashcards_app.urls")),
     path("auth/", include("flashCards_auth.urls")),
-
+    path("accounts/", include("allauth.urls"), name="accounts"),
 ]

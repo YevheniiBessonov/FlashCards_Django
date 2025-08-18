@@ -5,7 +5,7 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 p-4 ">
 
     {% for deck in decks %}
-    <div class="relative bg-custom-gradient rounded-xl border-1 border-gray-700 shadow-md shadow-gray-700 p-12 pt-2 group hover:shadow-lg hover:shadow-gray-300 transition-shadow"
+    <div class="relative bg-custom-gradient-before rounded-xl border-1 border-gray-700 shadow-md shadow-gray-700 p-12 pt-2 group hover:shadow-lg hover:shadow-gray-300 transition-shadow"
          x-data="{ showMenu: false }">
         <div class="absolute top-4 left-4">
             <button @click="showMenu = !showMenu">
