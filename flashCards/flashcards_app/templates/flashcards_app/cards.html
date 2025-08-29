@@ -1,95 +1,129 @@
 {% extends "flashcards_app/base_flashcards_app.html" %}
+{% load static %}
 {% block content %}
 
-<div class="relative mb-4 p-4 bg-gray-800 rounded-lg h-[80vh] cursor-pointer">
+<div x-data="{ showBack: false, showMenu: false }"
+     class="flex flex-col items-center justify-center">
 
+    <!-- Main Container for Card -->
+    <div class="group relative h-[80vh] w-[90vw] max-w-4xl">
 
-    {% if is_paginated %}
-    <div class="group absolute top-0 left-0 h-full w-[30vw] flex items-center justify-start z-10">
+        {% with card=page_obj.object_list.0 %}
+        {% if card %}
+        <!-- Wrap with Perspective -->
+        <div class="flex items-center justify-center w-full h-full [perspective:1000px]">
+
+            <!-- Flipper -->
+            <div class="relative w-4/5 h-4/5 text-center rounded-3xl shadow-2xl cursor-pointer
+                        transition-transform duration-700 [transform-style:preserve-3d]
+                        [&.flipped]:[transform:rotateY(180deg)]"
+                 :class="{ 'flipped': showBack }"
+                 @click="showBack = !showBack">
+
+                <!-- Front Card-->
+                <div class="absolute w-full h-full flex items-center justify-center
+                            p-8 overflow-hidden rounded-3xl [backface-visibility:hidden]
+                            bg-white/5 backdrop-blur-xl border border-white/10
+                            text-gray-50 text-3xl font-semibold">
+                    <h5 class="text-center">{{ card.front }}</h5>
+                </div>
+
+                <!-- Back Card -->
+                <div class="absolute w-full h-full flex items-center justify-center
+                            p-8 overflow-hidden rounded-3xl [backface-visibility:hidden]
+                            [transform:rotateY(180deg)]
+                            bg-white/5 backdrop-blur-xl border border-white/10
+                            text-gray-300 text-xl">
+                    <p class="text-center">{{ card.back }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Options Menu Button -->
+        <div x-data="{ open: false, modeOpen: false }" :class="{ 'z-20': open || modeOpen }"
+             class="absolute top-5 right-20 z-40">
+            <button @click="open = !open"
+                    class="p-2 rounded-full hover:bg-gray-900/70"
+                    :class="{'outline-none ring-2 ring-[#7D5FFF]/50 ring-offset-2 ring-offset-gray-800/70': open}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="lucide lucide-more-vertical">
+                    <circle cx="12" cy="12" r="1"/>
+                    <circle cx="12" cy="5" r="1"/>
+                    <circle cx="12" cy="19" r="1"/>
+                </svg>
+            </button>
+
+            <!-- Options Menu Dropdown -->
+            <div x-show="open" @click.away="open = false" x-transition
+                 class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-xl py-1
+                        border border-gray-700 overflow-hidden z-50">
+                <a href="{% url 'card-update' collection_pk=collection.pk deck_pk=deck.pk card_pk=card.pk %}?next={{ request.get_full_path|urlencode }}"
+                   class="flex items-center px-4 py-3 text-sm text-gray-200 hover:bg-gradient-to-r hover:from-[#41D9FF]/20 hover:text-white rounded-md mx-1 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="lucide lucide-edit mr-2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z"/>
+                        <line x1="16.5" x2="19.5" y1="6.5" y2="9.5"/>
+                    </svg>
+                    Edit Card
+                </a>
+                <a href="{% url 'card-delete' card_pk=card.pk collection_pk=collection.pk deck_pk=deck.pk %}?next={{ request.get_full_path|urlencode }}"
+                   class="flex items-center px-4 py-3 text-sm text-gray-200 hover:bg-gradient-to-r hover:from-red-950 hover:text-white rounded-md mx-1 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="lucide lucide-trash-2 mr-2">
+                        <path d="M3 6h18"/>
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                        <line x1="10" x2="10" y1="11" y2="17"/>
+                        <line x1="14" x2="14" y1="11" y2="17"/>
+                    </svg>
+                    Delete Card
+                </a>
+            </div>
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+
+        <!-- Previous Button -->
         {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}"
-           class="h-full bg-gray-600 hover:bg-custom-gradient text-white px-7 flex items-center rounded-r-full
-              transition-opacity duration-300 opacity-0 group-hover:opacity-100">
-            ←
-        </a>
+        <div class="absolute left-0 top-1/2 -translate-y-1/2 h-full w-24 flex items-center justify-start z-30
+                        opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+            <a href="?page={{ page_obj.previous_page_number }}"
+               class="h-[55vh] w-20 text-white text-3xl flex items-center justify-center rounded-l-full
+                      backdrop-blur-xl bg-white/5 hover:bg-white/10 duration-300 hover:scale-110 shadow-lg hover:shadow-purple-500/50 pointer-events-auto">
+                &lt;
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Next Button -->
+        {% if page_obj.has_next %}
+        <div class="absolute right-0 top-1/2 -translate-y-1/2 h-full w-24 flex items-center justify-end z-30
+                        opacity-0 group-hover:opacity-100 duration-300 pointer-events-none">
+            <a href="?page={{ page_obj.next_page_number }}"
+               class="h-[55vh] w-20 text-white text-3xl flex items-center justify-center rounded-r-full
+                      backdrop-blur-xl bg-white/5 hover:bg-white/10 duration-300 hover:scale-110 shadow-lg hover:shadow-purple-500/50 pointer-events-auto">
+                &gt;
+            </a>
+        </div>
+        {% endif %}
         {% endif %}
     </div>
-
-    <div class="group absolute top-0 right-0 h-full w-[30vw] flex items-center justify-end z-10">
-        {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}"
-           class="h-full bg-gray-600 hover:bg-custom-gradient text-white px-7 flex items-center rounded-l-full
-              transition-opacity duration-300 opacity-0 group-hover:opacity-100">
-            →
-        </a>
-        {% endif %}
+    <!-- Page Counter -->
+    {% if is_paginated %}
+    <div class=" text-gray-300 text-lg">
+        Card {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
     </div>
     {% endif %}
-
-    {% for card in cards %}
-    <div x-data="{ open: false }" class="absolute right-[15vh]">
-        <a href="#" class="z-10 absolute right-[4vh] " @click="open = !open">
-            <svg class="stroke-cyan-200 size-6 hover:stroke-pink-200" xmlns="http://www.w3.org/2000/svg" fill="none"
-                 viewBox="0 0 24 24" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-            </svg>
-        </a>
-        <div x-show="open"
-             @click.outside="open = false"
-             class="absolute right-0 mt-[5vh] w-25 bg-gray-600 rounded-md shadow-lg shadow-gray-600 z-50 opacity-[0.7]">
-            <a href="{% url 'card-update' collection_pk=collection.pk deck_pk=deck.pk card_pk=card.pk %}"
-               class="block px-4 py-2 text-white hover:bg-gray-700 rounded-md flex items-center">
-                <svg class="w-4 h-4 mr-2 text-cyan-200 " xmlns="http://www.w3.org/2000/svg" fill="none"
-                     viewBox="0 0 24 24"
-                     stroke-width="1"
-                     stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"/>
-                </svg>
-                Edit
-            </a>
-            <a href="{% url 'card-delete' collection_pk=collection.pk deck_pk=deck.pk card_pk=card.pk %}"
-               class="block px-4 py-2 text-white hover:bg-gray-700 rounded-md flex items-center">
-                <svg class="w-4 h-4 mr-2 text-pink-300" xmlns="http://www.w3.org/2000/svg" fill="none"
-                     viewBox="0 0 24 24" stroke-width="1.5"
-                     stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/>
-                </svg>
-                Delete
-            </a>
-        </div>
-    </div>
-    <div x-data="{ open: false }" class="h-full flex flex-col">
-
-        <div class="relative mb-4 p-4 bg-gray-800 rounded-lg h-[80vh]">
-
-            {% for card in cards %}
-            <div x-data="{ open: false, clicked: false }" class="h-full flex flex-col">
-
-                <div @click="if (!clicked) { open = true; clicked = true }"
-                     :class="open ? 'h-1/2 border-b-4' : 'h-full'"
-                     class="flex items-center justify-center text-center text-blue-200"
-                     :class="clicked ? '' : 'cursor-pointer'">
-                    <h5>{{ card.front }}</h5>
-                </div>
-
-                <div x-show="open"
-                     x-transition:enter="transition ease-out duration-300"
-                     x-transition:enter-start="opacity-0 transform -translate-y-full"
-                     x-transition:enter-end="opacity-100 transform translate-y-0"
-                     class="h-1/2 flex items-center justify-center text-center text-pink-300 overflow-hidden">
-                    <p>{{ card.back }}</p>
-                </div>
-
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-{% endfor %}
 </div>
 
 {% endblock %}

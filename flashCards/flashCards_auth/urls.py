@@ -7,7 +7,7 @@ from django.contrib.auth.views import LogoutView, PasswordResetView, PasswordRes
 urlpatterns = [
     path("login/", CustomLoginView.as_view(template_name="flashCards_auth/login.html"), name="login"),
     path("register/", CustomRegisterView.as_view(), name="register"),
-    path("logout/", LogoutView.as_view(next_page="/"), name="logout"),
+    path("logout/", LogoutView.as_view(next_page="login"), name="logout"),
     path("password_reset/", PasswordResetView.as_view(
         form_class=CustomPasswordResetForm,
         template_name="flashCards_auth/password_reset.html",

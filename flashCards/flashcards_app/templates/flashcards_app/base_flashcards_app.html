@@ -2,103 +2,214 @@
 <html lang="en">
 <head>
     {% load static %}
+    {% load ui_tags %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <meta name="description" content="Flashcards App - Study smarter with custom decks and collections.">
+    <meta name="author" content="Yevhenii Bessonov">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <title>Flashcards App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'flashcards_app/css/output.css' %}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap"
-          rel="stylesheet">
 </head>
-<body class="min-h-screen bg-gradient-to-br from-gray-800 via-gray-700 to-gray-900 font-sans">
 
-<div class="flex justify-between bg-gray-800 w-full">
-    <div class="flex items-center ml-4">
-        <a href="{% url 'index' %}"><img src="{% static 'flashcards_app/images/logo.png' %}"
-                                         class="w-16 transition-shadow rounded-lg duration-300 hover:shadow-lg hover:shadow-gray-300 "></a>
+<body class="min-h-screen flex flex-col m-0 p-0 bg-custom-bg bg-cover bg-center font-archivo text-white">
+
+<!-- Header -->
+<header class="fixed top-0 left-0 w-full h-[70px] px-8 z-50 flex justify-between
+               items-center rounded-b-2xl {% glass_shadow %}">
+
+    <!-- Header Left Side -->
+    <div class="flex items-center space-x-6">
+
+        <!-- Logo/MainPage Link -->
+        <a href="{% url 'collection-list' %}">
+            <img src="{% static 'flashcards_app/images/logo.png' %}"
+                 class="w-14 rounded-xl {% smooth_scale %} hover:shadow-lg hover:shadow-[#41D9FF]/40"
+                 alt="Flashcards App Logo">
+        </a>
+
+        <!-- Icons -->
+        <nav class="hidden md:flex items-center space-x-6 text-gray-300 text-sm">
+            <a href="#" class="{% smooth_violet_hover %}">
+                <i class="fa-brands fa-telegram"></i>
+                <span>Bot</span>
+            </a>
+            <a href="#" class="{% smooth_violet_hover %}">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>Help</span>
+            </a>
+            <a href="#" class="{% smooth_violet_hover %}">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Features</span>
+            </a>
+        </nav>
     </div>
 
-    <div x-data="{ open: false }" class="relative inline-block rounded-md flex-none right-[40px]">
+    <!-- Header Right Side -->
+
+    <!-- User Profile Dropdown Button -->
+    <div x-data="{ open: false }" class="relative inline-block">
         <img src="{% static 'flashcards_app/images/login.png' %}"
              @click="open = !open"
-             class="w-14 mt-[1px] cursor-pointer rounded-full transition-shadow duration-300
-            hover:shadow-md hover:shadow-gray-300"
-             :class="{'shadow-lg shadow-gray-300': open}"/>
+             class="w-14 h-14 cursor-pointer rounded-full hover:border-[#7D5FFF]
+                    shadow-lg shadow-black/30 hover:shadow-[#41D9FF]/60 {% smooth_scale %}"
+             :class="{'ring-2 ring-[#7D5FFF]/50': open}" alt="User Profile"/>
 
+        <!-- User Profile Dropdown Menu -->
         <div x-show="open"
              @click.away="open = false"
-             class="absolute left-1/2 -translate-x-1/2 mt-1 w-auto bg-gray-800 rounded-md shadow-lg shadow-gray-600">
+             class="right-[-30px] mt-2 {% dropdown_menu %}">
             {% if not user.is_authenticated %}
             <a href="{% url 'login' %}"
-               class="block px-4 py-2 flex items-center text-gray-400 hover:text-gray-300">
-                <i class="fa-solid fa-right-to-bracket mr-2"></i>Login</a>
+               class="{% btn_dropdown_primary %}">
+                <i class="fa-solid fa-right-to-bracket mr-2 text-sm"></i>Login</a>
             <a href="{% url 'register' %}"
-               class="block px-4 py-2 flex items-center text-gray-400 hover:text-gray-300">
-                <i class="fa-solid fa-user-plus mr-2"></i>Register</a>
+               class="{% btn_dropdown_primary %}">
+                <i class="fa-solid fa-user-plus mr-2 text-sm"></i>Register</a>
             {% else %}
             {% if user.username %}
-            <div class="px-4 py-2 flex justify-center items-center text-gray-400 hover:text-gray-300">
-                Hi, {{user.username}}
-            </div>
-            <hr class="flex-grow border-t-2 border-gray-600 mx-2 pb-2">
+            <div class="px-4 py-2 text-center text-gray-300">Hi, {{user.username}}</div>
+            <hr class="border-gray-700 my-1">
             {% endif %}
             <a href="{% url 'collection-list' %}"
-               class="block px-4 py-2 flex items-center text-gray-400 hover:text-gray-300">
-                <i class="fa-solid fa-layer-group mr-2"></i>Collection</a>
+               class="{% btn_dropdown_primary %}">
+                <i class="fa-solid fa-layer-group mr-2 text-sm"></i>Collection</a>
             <form action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
                 <button type="submit"
-                        class="block w-full text-left px-4 py-2 flex items-center text-gray-400 hover:text-gray-300">
-                    <i class="fa-solid fa-right-from-bracket mr-2"></i>Logout</button>
+                        class="{% btn_dropdown_danger %} block w-full text-left">
+                    <i class="fa-solid fa-right-from-bracket mr-2 text-sm"></i>Logout
+                </button>
             </form>
             {% endif %}
         </div>
-    </div>
-</div>
-<div class="min-h-screen flex">
-    <div class="w-1/4 text-left bg-gray-900/80 backdrop-blur py-8 px-8 text-white">
-        <a href="{% url 'collection-create' %}" class="text-white font-bold hover:text-pink-300 py-2 block">
-            <span class="mr-2">+</span>Create Collection</a>
 
-        <h2 class="text-xl font-bold text-center pb-4 pt-6">My Collections</h2>
-        {% for collection in collections %}
-        <p class="mb-2"><a href="{% url 'decks-by-collection' collection.id %}">{{collection.name}}</a>
-            <a href="{% url 'deck-create' collection.id %}">
-                <svg class="w-4 h-4 inline-block ml-2 text-cyan-200 " xmlns="http://www.w3.org/2000/svg" fill="none"
-                     viewBox="0 0 24 24" stroke-width="1.5"
-                     stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
-                </svg>
-            </a>
-
-            <a href="{% url 'collection-update' collection.id %}">
-                <svg class="w-4 h-4 inline-block ml-2 text-cyan-200 " xmlns="http://www.w3.org/2000/svg" fill="none"
-                     viewBox="0 0 24 24"
-                     stroke-width="1"
-                     stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"/>
-                </svg>
-            </a>
-            <a href="{% url 'collection-delete' collection.id %}">
-                <svg class="w-4 h-4 inline-block ml-2 text-pink-300" xmlns="http://www.w3.org/2000/svg" fill="none"
-                     viewBox="0 0 24 24" stroke-width="1.5"
-                     stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/>
-                </svg>
-            </a>
-        </p>
-        {% endfor %}
     </div>
-    <div class="w-3/4 p-8 text-center">
+</header>
+
+<!-- Content -->
+<div class="flex-grow flex mt-[100px]">
+
+    <!-- Sidebar -->
+    <nav class="relative z-40 w-[280px] p-4 shrink-0 rounded-r-2xl {% glass_shadow %}">
+        <div class="flex items-center justify-center mb-6">
+            <h2 class="text-lg font-semibold mb-6 text-gray-200 tracking-wide">
+                My Collections
+            </h2>
+        </div>
+        <div>
+            {% for collection in collections %}
+            <div x-data="{ open: false }" class="relative z-10">
+                <div class="group flex items-center justify-between mb-2  rounded-2xl text-sm font-medium
+                duration-200 border border-white/10
+                hover:shadow-lg hover:shadow-indigo-500/90 hover:border-[#7D5FFF]/40 hover:bg-white/5
+                {% smooth_scale %}
+                {% if current_collection_id == collection.id %}
+                    border-[#7D5FFF]/50 shadow-md shadow-indigo-500/90 bg-white/5 text-white scale-105
+                {% else %}
+                    text-gray-400 hover:text-white
+                {% endif %}">
+
+                    <a href="{% url 'decks-by-collection' collection.id %}" class="flex-1 block px-3 py-2">
+                        {{ collection.name }}
+                    </a>
+
+                    <!-- Options Dropdown Button for Collection -->
+                    <button @click="open = !open"
+                            class="p-1 mr-1 rounded-full text-gray-400 hover:text-white
+                                   bg-transparent hover:bg-gray-600 transition-colors duration-200
+                                   opacity-0 group-hover:opacity-100 group-focus-within:opacity-100"
+                            :class="{'outline-none ring-2 ring-[#7D5FFF]/50 ': open}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-more-vertical">
+                            <circle cx="12" cy="12" r="1"/>
+                            <circle cx="12" cy="5" r="1"/>
+                            <circle cx="12" cy="19" r="1"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Options Dropdown for Collection -->
+                <div x-show="open" x-cloak @click.away="open = false" x-transition
+                     class="left-full top-0 ml-2 {% dropdown_menu %}">
+                    <a href="{% url 'deck-create' pk=collection.pk %}"
+                       class="{% btn_dropdown_primary %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-plus-circle mr-2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M8 12h8"/>
+                            <path d="M12 8v8"/>
+                        </svg>
+                        Add Deck
+                    </a>
+                    <a href="{% url 'collection-update' pk=collection.pk %}"
+                       class="{% btn_dropdown_primary %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-edit mr-2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z"/>
+                            <line x1="16.5" x2="19.5" y1="6.5" y2="9.5"/>
+                        </svg>
+                        Edit
+                    </a>
+                    <a href="{% url 'collection-delete' pk=collection.pk %}"
+                       class="{% btn_dropdown_danger %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-trash-2 mr-2">
+                            <path d="M3 6h18"/>
+                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                            <line x1="10" x2="10" y1="11" y2="17"/>
+                            <line x1="14" x2="14" y1="11" y2="17"/>
+                        </svg>
+                        Delete
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </nav>
+
+    <!-- Content with will extend this template -->
+    <main class="mx-auto">
         {% block content %}
         {% endblock %}
-    </div>
-
+    </main>
 </div>
+
+
+<!-- Footer -->
+<footer class="mt-14 text-gray-400 {% glass_shadow %}">
+    <div class="max-w-7xl mx-auto px-8 py-6 flex flex-col md:flex-row items-center
+                justify-between space-y-4 md:space-y-0">
+        <div class="flex items-center space-x-3">
+            <img src="{% static 'flashcards_app/images/logo.png' %}"
+                 class="w-10 rounded-lg shadow-md shadow-black/40" alt="Logo">
+            <span class="font-bold text-white">Flashcards App</span>
+        </div>
+        <div class="flex space-x-6 text-sm">
+            <a href="#" class="{% smooth_violet_hover %}">About</a>
+            <a href="#" class="{% smooth_violet_hover %}">Contact</a>
+            <a href="#" class="{% smooth_violet_hover %}">Privacy Policy</a>
+        </div>
+        <div class="flex space-x-4 text-lg">
+            <a href="#" class="{% smooth_violet_hover %}"><i class="fab fa-github"></i></a>
+            <a href="#" class="{% smooth_violet_hover %}"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="{% smooth_violet_hover %}"><i class="fab fa-discord"></i></a>
+        </div>
+    </div>
+    <div class="text-center text-xs text-gray-500 py-2 border-t border-[#41D9FF]/10">
+        © {{year|default:2025}} Flashcards App — All rights reserved.
+    </div>
+</footer>
 </body>
 </html>

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     {% load static %}
+    {% load ui_tags %}
     {% load socialaccount %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,47 +12,83 @@
     <link rel="stylesheet" href="{% static 'flashcards_app/css/output.css' %}">
     <link rel="stylesheet" href="{% static 'flashcards_app/css/style.css' %}">
 </head>
-<body class="bg-gray-600">
+<body class="min-h-full m-0 p-0  bg-custom-bg bg-cover bg-center font-archivo text-white overflow-hidden">
 
-<div class="flex justify-between bg-gray-800 w-screen">
-    <div class="flex items-center ml-4">
-        <a href="{% url 'index' %}"><img src="{% static 'flashcards_app/images/logo.png' %}"
-                                         class="w-16 transition-shadow rounded-lg duration-300 hover:shadow-lg hover:shadow-gray-300 "></a>
+<!-- HEADER -->
+<header class="fixed top-0 left-0 w-full h-[70px] px-8 z-50 flex justify-between
+               items-center rounded-b-2xl {% glass_shadow %}">
+
+    <!-- Header Left Side -->
+    <div class="flex items-center space-x-6">
+
+        <!-- Logo/MainPage Link -->
+        <a href="{% url 'collection-list' %}">
+            <img src="{% static 'flashcards_app/images/logo.png' %}"
+                 class="w-14 rounded-xl {% smooth_scale %} hover:shadow-lg hover:shadow-[#41D9FF]/40"
+                 alt="Flashcards App Logo">
+        </a>
+
+        <!-- Icons -->
+        <nav class="hidden md:flex items-center space-x-6 text-gray-300 text-sm">
+            <a href="#" class="{% smooth_violet_hover %}">
+                <i class="fa-brands fa-telegram"></i>
+                <span>Bot</span>
+            </a>
+            <a href="#" class="{% smooth_violet_hover %}">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>Help</span>
+            </a>
+            <a href="#" class="{% smooth_violet_hover %}">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Features</span>
+            </a>
+        </nav>
     </div>
-    <div x-data="{ open: false }" class="relative inline-block rounded-md flex-none right-[40px]">
+
+    <!-- Header Right Side -->
+
+    <!-- User Profile Dropdown Button -->
+    <div x-data="{ open: false }" class="relative inline-block">
         <img src="{% static 'flashcards_app/images/login.png' %}"
              @click="open = !open"
-             class="w-14 mt-[1px] cursor-pointer rounded-full transition-shadow duration-300
-            hover:shadow-md hover:shadow-gray-300"
-             :class="{'shadow-lg shadow-gray-300': open}"/>
+             class="w-14 h-14 cursor-pointer rounded-full hover:border-[#7D5FFF]
+                    shadow-lg shadow-black/30 hover:shadow-[#41D9FF]/60 {% smooth_scale %}"
+             :class="{'ring-2 ring-[#7D5FFF]/50': open}" alt="User Profile"/>
 
+        <!-- User Profile Dropdown Menu -->
         <div x-show="open"
              @click.away="open = false"
-             class="absolute left-1/2 -translate-x-1/2 mt-1 w-auto bg-gray-800 rounded-md shadow-lg shadow-gray-600">
+             class="right-[-30px] mt-2 {% dropdown_menu %}">
             {% if not user.is_authenticated %}
             <a href="{% url 'login' %}"
-               class="block px-4 py-2 flex items-center text-gray-400 hover:text-gray-300">
-                <i class="fa-solid fa-right-to-bracket mr-2"></i>Login</a>
+               class="{% btn_dropdown_primary %}">
+                <i class="fa-solid fa-right-to-bracket mr-2 text-sm"></i>Login</a>
             <a href="{% url 'register' %}"
-               class="block px-4 py-2 flex items-center text-gray-400 hover:text-gray-300">
-                <i class="fa-solid fa-user-plus mr-2"></i>Register</a>
+               class="{% btn_dropdown_primary %}">
+                <i class="fa-solid fa-user-plus mr-2 text-sm"></i>Register</a>
             {% else %}
+            {% if user.username %}
+            <div class="px-4 py-2 text-center text-gray-300">Hi, {{user.username}}</div>
+            <hr class="border-gray-700 my-1">
+            {% endif %}
             <a href="{% url 'collection-list' %}"
-               class="block px-4 py-2 flex items-center text-gray-400 hover:text-gray-300">
-                <i class="fa-solid fa-layer-group mr-2"></i>Collection</a>
+               class="{% btn_dropdown_primary %}">
+                <i class="fa-solid fa-layer-group mr-2 text-sm"></i>Collection</a>
             <form action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
                 <button type="submit"
-                        class="block w-full text-left px-4 py-2 flex items-center text-gray-400 hover:text-gray-300">
-                    <i class="fa-solid fa-right-from-bracket mr-2"></i>Logout
+                        class="{% btn_dropdown_danger %} block w-full text-left">
+                    <i class="fa-solid fa-right-from-bracket mr-2 text-sm"></i>Logout
                 </button>
             </form>
             {% endif %}
         </div>
+
     </div>
-</div>
+</header>
 
 {% block content %}
 {% endblock %}
+
 </body>
 </html>
